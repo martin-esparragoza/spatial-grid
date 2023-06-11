@@ -68,35 +68,36 @@ bool vector_resize(struct Vector* v, size_t size) {
 }
 
 /**
- * Adds an element to the vector. Resizes when needed.
- * @param element Element to add to the vector.
- */
-bool vector_push_forward(struct Vector* v, void* element) {
-    if (v->length >= v->allocated / v->element_size) {
-        if (!vector_resize(v, v->resize_fun(v->allocated))) {
-            return false;
-        }
-    }
-
-    if (!memcpy(v->data + v->length++ * v->element_size, element, v->element_size)) {
-        return false;
-    }
-    return true;
-}
-
-/**
  * vector_push_forward and vector_add are distictly different.
  * Gives pointer to allocated element in vector. Effectiveley
  * gives last element (allocs kind of).
+ * @return NULL if bad
  */
 void* vector_add(struct Vector* v) {
-    if (v->length >= v->allocated / v->element_size) {
+    while (v->length >= v->allocated / v->element_size) {
         if (!vector_resize(v, v->allocated * 2)) {
             return NULL;
         }
     }
 
     return v->data + v->length++ * v->element_size;
+}
+
+/**
+ * Adds an element to the vector. Resizes when needed.
+ * @param element Element to add to the vector.
+ */
+bool vector_push_forward(struct Vector* v, void* element) {
+    void* elem = vector_add(v);
+
+    if (elem == NULL) {
+        return false;
+    }
+
+    if (!memcpy(elem, element, v->element_size)) {
+        return false;
+    }
+    return true;
 }
 
 /**

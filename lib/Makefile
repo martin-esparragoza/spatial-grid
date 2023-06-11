@@ -9,5 +9,5 @@ all: $(OBJS)
 clean:
 	rm -rf *.o
 
-%.o: %.c
+%.o: %.c ../include/%.h
 	$(CC) -c $< $(CFLAGS) -o $@
