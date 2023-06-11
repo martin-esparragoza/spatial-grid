@@ -84,7 +84,7 @@ struct Vector spatialhashgrid_fetch(struct SpatialHashgrid* shg, struct Rectangl
             struct SpatialHashgridEntry* entry = *(struct SpatialHashgridEntry**) vector_get(&shg->buckets[i1], j);
             if (!entry->found) {
                 vector_push_forward(&ret, entry);
-                entry->found = false;
+                entry->found = true;
             }
         }
 
