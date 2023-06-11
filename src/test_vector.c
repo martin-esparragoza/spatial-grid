@@ -10,9 +10,9 @@ int main() {
     ASSERT(vector_new(&v, 1, sizeof(unsigned)));
 
     for (unsigned i = 0; i < NUM; i++) {
-        unsigned* val = (unsigned*) vector_add(&v);
+        bool val = vector_push_forward(&v, &i);
         ASSERT(val);
-        *val = i;
+        //*val = i;
     }
 
     ASSERT(v.length == NUM);
@@ -22,4 +22,6 @@ int main() {
         ASSERT(val);
         printf("%d\n", *val);
     }
+
+    vector_delete(&v);
 }

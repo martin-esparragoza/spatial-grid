@@ -3,6 +3,18 @@
 #include "../include/vector.h"
 #include "../include/extern.h"
 
+int vector_resize_fun_default(size_t allocated) {
+    return allocated * 2;
+}
+
+// An example of a max length vector would be something like this:
+/**
+ * #define MAX 10
+ * int vector_resize_fun_max(size_t allocated) {
+ *     return (int) ((MAX / 2) * tanh(allocated / MAX) + (MAX / 2));
+ * }
+ */
+
 /**
  * Create a new vector object.
  * @param initial_capacity Starting length of your vector (elements)
@@ -18,6 +30,7 @@ bool vector_new(struct Vector* v, size_t initial_capacity, size_t element_size) 
     v->allocated = initial_capacity * element_size;
     v->element_size = element_size;
     v->length = 0;
+    v->resize_fun = &vector_resize_fun_default;
     return true;
 }
 
@@ -60,7 +73,7 @@ bool vector_resize(struct Vector* v, size_t size) {
  */
 bool vector_push_forward(struct Vector* v, void* element) {
     if (v->length >= v->allocated / v->element_size) {
-        if (!vector_resize(v, v->allocated * 2)) {
+        if (!vector_resize(v, v->resize_fun(v->allocated))) {
             return false;
         }
     }
@@ -84,4 +97,19 @@ void* vector_add(struct Vector* v) {
     }
 
     return v->data + v->length++ * v->element_size;
+}
+
+/**
+ * Moves vector length to 0
+ */
+void vector_clear(struct Vector* v) {
+    v->length = 0;
+}
+
+/**
+ * Deallocs vector. Needs to be recreated with new again.
+ */
+void vector_delete(struct Vector* v) {
+    v->length = v->allocated = v->element_size = 0;
+    free(v->data);
 }

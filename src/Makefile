@@ -2,7 +2,7 @@
 
 # Previously compiled objects from /lib
 OBJS = $(wildcard ../lib/*.o) # Should be dynamic
-EXECS = test_vector.o
+EXECS = test_vector.o test_shg.o
 
 .PHONY: all clean
 
@@ -15,4 +15,4 @@ $(OBJS):
 	# Remove circular dependency
 
 %.o: %.c $(OBJS)
-	$(CC) $< $(CFLAGS) -o $@ $(CLINK) $(OBJS)
+	$(CC) $< $(CFLAGS) -o $@ $(OBJS) $(CLINK)
