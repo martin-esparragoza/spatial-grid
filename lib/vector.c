@@ -53,6 +53,20 @@ void* vector_get_sf(struct Vector* v, size_t index) {
     return v->data + (index * v->element_size);
 }
 
+void vector_set(struct Vector* v, size_t index, void* value) {
+    memcpy(v->data + (index * v->element_size), value, v->element_size);
+}
+
+bool vector_set_sf(struct Vector* v, size_t index, void* value) {
+    if (index >= v->length) {
+        return false;
+    }
+
+    vector_set(v, index, value);
+    return true;
+}
+
+
 /**
  * Resize a vector to a desired size.
  * @param size Number of bytes to make the vector length.

@@ -19,11 +19,12 @@ struct SpatialHashgrid* spatialhashgrid_new(size_t width, size_t height, size_t 
     shg->height = height;
     shg->width_div = width_div;
     shg->height_div = height_div;
+    struct SpatialHashgridEntry* entry = NULL;
     
     vector_new(&shg->entries, VECTOR_DEFAULT_CAPACITY, sizeof(struct Rectangle*));
-    vector_new(&shg->found, VECTOR_DEFAULT_CAPACITY, sizeof(size_t));
+    vector_new(&shg->found, VECTOR_DEFAULT_CAPACITY, sizeof(bool));
     for (size_t i = 0; i < shg->width_div * shg->height_div; i++) {
-        vector_new(&shg->buckets[i], VECTOR_DEFAULT_CAPACITY, sizeof(struct SpatialHashgridEntry*));
+        vector_new(&shg->buckets[i], VECTOR_DEFAULT_CAPACITY, sizeof(size_t));
     }
 
     return shg;
@@ -33,8 +34,8 @@ struct SpatialHashgrid* spatialhashgrid_new(size_t width, size_t height, size_t 
 static inline size_t spatialhashgrid_get(struct SpatialHashgrid* shg, real_t x, real_t y);
 static inline size_t spatialhashgrid_get(struct SpatialHashgrid* shg, real_t x, real_t y) { 
     return 
-        ((size_t) (x / (shg->width / shg->width_div))) +
-        ((size_t) (y / (shg->height / shg->height_div)) * shg->width_div);
+        ((size_t) (x / ((real_t) shg->width / shg->width_div))) +
+        ((size_t) (y / ((real_t) shg->height / shg->height_div)) * shg->width_div);
 }
 
 /**
@@ -51,7 +52,7 @@ void spatialhashgrid_insert(struct SpatialHashgrid* shg, struct Rectangle* rect)
 
     size_t i1 = spatialhashgrid_get(shg, rect->x, rect->y);
     size_t i2 = spatialhashgrid_get(shg, rect->x + rect->width, rect->y + rect->height);
-    size_t width = ceil(rect->width / (shg->width / shg->width_div));
+    size_t width = ceil(rect->width / ((real_t) shg->width / shg->width_div));
 
     while (i1 <= i2) {
         // Assign bucket index values
@@ -104,73 +105,13 @@ void spatialhashgrid_fetch(struct SpatialHashgrid* shg, struct Rectangle* rect, 
     }
 }
 
-/*void spatialhashgrid_insert(struct SpatialHashgrid* shg, struct Rectangle* rect) {
-    struct SpatialHashgridEntry* entry = (struct SpatialHashgridEntry*) malloc(sizeof(struct SpatialHashgridEntry));
-    entry->rect = rect;
-    entry->found = false;
-
-    // Assign buckets
-    size_t i1 = spatialhashgrid_get(shg, rect->x, rect->y);
-    size_t i2 = spatialhashgrid_get(shg, rect->x + rect->width, rect->y + rect->height);
-    size_t width = ceil(rect->width / (shg->width / shg->width_div));
-
-    // TODO I hate this method of doing things
-    size_t i = 0;
-    while (i1 <= i2) {
-        vector_push_forward(&shg->buckets[i1], &entry);
-
-        // Terrible
-        if (i != 0 && i % width == 0) {
-            i1 += shg->width_div - width;
-            i = 0;
-        } else {
-            i1++;
-            i++;
-        }
-    }
-
-    return;
-}*/
-
 /**
- * Get all entities in this rectangle
- * @return Vector of SpatialHashgridEntry*.
+ * Deallocs everything
  */
-/*struct Vector spatialhashgrid_fetch(struct SpatialHashgrid* shg, struct Rectangle* rect) {
-    struct Vector ret;
-    vector_new(&ret, VECTOR_DEFAULT_CAPACITY, sizeof(struct SpatialHashgridEntry*));
-
-    // Assign buckets
-    size_t i1 = spatialhashgrid_get(shg, rect->x, rect->y);
-    size_t i2 = spatialhashgrid_get(shg, rect->x + rect->width, rect->y + rect->height);
-    size_t width = ceil(rect->width / (shg->width / shg->width_div));
-
-    // TODO I hate this method of doing things
-    size_t i = 0;
-    while (i1 <= i2) {
-        for (size_t j = 0; j < shg->buckets[i1].length; j++) {
-            struct SpatialHashgridEntry* entry = *(struct SpatialHashgridEntry**) vector_get(&shg->buckets[i1], j);
-            if (!entry->found) {
-                vector_push_forward(&ret, entry);
-                entry->found = true;
-            }
-        }
-
-        // Terrible
-        if (i != 0 && i % width == 0) {
-            i1 += shg->width_div - width;
-            i = 0;
-        } else {
-            i1++;
-            i++;
-        }
+void spatialhashgrid_delete(struct SpatialHashgrid* shg) {
+    vector_delete(&shg->entries);
+    vector_delete(&shg->found);
+    for (size_t i = 0; i < shg->width_div * shg->height_div; i++) {
+        vector_delete(&shg->buckets[i]);
     }
-
-    // Switch back the found flags
-    for (size_t j = 0; j < ret.length; j++) {
-        ((struct SpatialHashgridEntry*) vector_get(&ret, j))->found = false;
-    }
-
-    return ret;
-}*/
-//void spatialhashgrid_delete(struct SpatialHashgrid* shg);
+}
