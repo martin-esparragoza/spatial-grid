@@ -1,2 +1,2 @@
-# Spatial hashgrid
+# Spatial grid
 Yipee
