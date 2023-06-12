@@ -2,7 +2,7 @@
 
 # Previously compiled objects from /lib
 OBJS = $(wildcard ../lib/*.o) # Should be dynamic
-EXECS = test_vector.o test_shg.o
+EXECS = test_vector.o test_sg.o
 
 .PHONY: all clean
 
