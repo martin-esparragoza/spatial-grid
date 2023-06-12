@@ -6,11 +6,11 @@
 #include <stdlib.h>
 #define WIDTH 1000000
 #define HEIGHT 1000000
-#define CELL_W 8333
-#define CELL_H 8333
+#define CELL_W 500
+#define CELL_H 500
 #define ENT_WIDTH 6
 #define ENT_HEIGHT 6
-#define NUM_ENTS 5000000
+#define NUM_ENTS 2000000
 
 struct SpatialHashgrid* shg;
 struct Vector entries;

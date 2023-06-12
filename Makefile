@@ -1,7 +1,7 @@
 # Main called makefile. Calls other makefiles for building. Also has defined makefile variables.
 
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -Ofast -march=native -mtune=native
 CLINK = -lm
 export
 
