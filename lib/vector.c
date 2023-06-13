@@ -88,7 +88,7 @@ bool vector_resize(struct Vector* v, size_t size) {
  * @return NULL if bad
  */
 void* vector_add(struct Vector* v) {
-    while (v->length >= v->allocated / v->element_size) {
+    while (v->length >= (v->allocated / v->element_size)) {
         if (!vector_resize(v, v->allocated * 2)) {
             return NULL;
         }

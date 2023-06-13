@@ -10,7 +10,7 @@
 #define CELL_H 1024
 #define ENT_WIDTH 6
 #define ENT_HEIGHT 6
-#define NUM_ENTS 500000
+#define NUM_ENTS 1000000
 
 struct SpatialGrid* sg;
 struct Vector entries;
