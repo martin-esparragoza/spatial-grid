@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#define WIDTH 500000
-#define HEIGHT 500000
-#define CELL_W 1024
-#define CELL_H 1024
+#define WIDTH 1000000
+#define HEIGHT 1000000
+#define CELL_W 924
+#define CELL_H 924
 #define ENT_WIDTH 6
 #define ENT_HEIGHT 6
 #define NUM_ENTS 1000000
